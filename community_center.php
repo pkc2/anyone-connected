@@ -3,7 +3,12 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Search community center</title>
+        <title>Search community center - Anyone Get Connected !</title>
+        <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+
+        <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
         <style>#googleMap {width:100%; height:500px}</style>
         <style type="text/css">
             table,th,tr,td{
@@ -22,12 +27,23 @@
             /* ------- Grab and extract data from database --------- */
             var subu_selection;
             var map;
-            var marker;
             var infos = [];
-            var detailsOfClicked;
+            var detailsOfClicked; // For info window
+            var currentLat;
+            var currentLng;
+            var destnLat;
+            var destnLng;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var directionsService = new google.maps.DirectionsService;
+
             function show_selection() {
+                map = new google.maps.Map(document.getElementById("googleMap"), {
+                    center: new google.maps.LatLng(-37.8142, 144.9632),
+                    zoom: 10,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
                 subu_selection = document.getElementById("sel_suburb").value;
-                $.post('searchBySuburb.php', {selectedSuburb: subu_selection}, function (data) {
+                $.post('phpdb/php_commu_center.php', {selectedSuburb: subu_selection}, function (data) {
                     var comm_rows = data.split("+");
                     var nameOfCenter = new Array();
                     var descOfCenter = new Array();
@@ -35,6 +51,7 @@
                     var suburbOfCenter = new Array();
                     var latiOfCenter = new Array();
                     var longiOfCenter = new Array();
+                    var marker = [];
                     for (var i = 0; i < comm_rows.length - 1; i++)
                     {
                         var comm_cols = comm_rows[i].split("|");
@@ -47,64 +64,66 @@
                     }
                     // -------- Input table -------
                     //alert(comm_rows.length);
-                    var innerTable = "";
-                    for (var k = 0; k < comm_rows.length - 1; k++) {
-                        innerTable += "<tr><td>" + nameOfCenter[k] + "</td><td>" + descOfCenter[k] + "</td><td>" + addrOfCenter[k] + "</td><td>" + suburbOfCenter[k] + "</td></tr>";
-                    }
+//                    var innerTable = "";
+//                    for (var k = 0; k < comm_rows.length - 1; k++) {
+//                        innerTable += "<tr><td>" + nameOfCenter[k] + "</td><td>" + descOfCenter[k] + "</td><td>" + addrOfCenter[k] + "</td><td>" + suburbOfCenter[k] + "</td></tr>";
+//                    }
                     //      --- If the area has no community center ---
-                    if (comm_rows.length === 1)
-                    {
-                        tablePart3 = document.getElementById("t3");
-                        tablePart3.innerHTML = "<div style='font-size: large; color:orange'>Sorry, there is no community center in this area.</div>";
-                    } else {
-                        tablePart3 = document.getElementById("t3");
-                        tablePart3.innerHTML = "<div class='table-responsive'><table class='table table-striped table-condensed table-hover'><thead><tr><td>Center</td><td>Description</td><td>Address</td><td>Suburb</td></tr></thead><tbody>" + innerTable + "</tbody></table></div>";
-                    }
+//                    if (comm_rows.length === 1)
+//                    {
+//                        tablePart3 = document.getElementById("t3");
+//                        tablePart3.innerHTML = "<div style='font-size: large; color:orange'>Sorry, there is no community center in this area.</div>";
+//                    } else {
+//                        tablePart3 = document.getElementById("t3");
+//                        tablePart3.innerHTML = "<div class='table-responsive'><table class='table table-striped table-condensed table-hover'><thead><tr><td>Center</td><td>Description</td><td>Address</td><td>Suburb</td></tr></thead><tbody>" + innerTable + "</tbody></table></div>";
+//                    }
 
                     // ------- Markers on Map -------
-
-                    var map = new google.maps.Map(document.getElementById('googleMap'), {
-                        zoom: 14,
-                        center: {lat: -37.8142, lng: 144.9632}
-                    });
-
                     for (var q = 0; q < latiOfCenter.length; q++) { // Start of multiple markers for(;;) loop -------
                         laFloat = parseFloat(latiOfCenter[q]);
                         lonFloat = parseFloat(longiOfCenter[q]);
                         /* -- Move to area of new search --- */
-                        var latLngNewCenter = new google.maps.LatLng(parseFloat(latiOfCenter[0]),parseFloat(longiOfCenter[0]));
+                        var latLngNewCenter = new google.maps.LatLng(parseFloat(latiOfCenter[0]), parseFloat(longiOfCenter[0]));
                         map.panTo(latLngNewCenter);
                         /* ----- */
                         var myLatLng = {lat: laFloat, lng: lonFloat};
-                        marker = new google.maps.Marker({
+                        marker[q] = new google.maps.Marker({
                             position: myLatLng,
                             map: map,
                             title: nameOfCenter[q]
                         });
                         //  -------- Info Window --
-                        var content = nameOfCenter[q]+"<br><div><button class='btn btn-default btn-sm' type='button' style='text-align:center' onclick='showDetails()'>Show Details</button></div>";
-                        detailsOfClicked = "";
-                        detailsOfClicked = "<div class='table-responsive'><table class='table table-striped table-condensed table-hover'><tr><td>Center:</td><td>"
-                                + nameOfCenter[q]
-                                +"</td></tr><tr><td>Description:</td><td>" 
-                                + descOfCenter[q] 
-                                + "</td></tr><tr><td>Address:</td><td>" 
-                                + addrOfCenter[q] 
-                                + "</td></tr><tr><td>Suburb:</td><td>" 
-                                + suburbOfCenter[q] 
-                                + "</td></tr></table></div>";
+                        var content = nameOfCenter[q]
+                                + "<br><div><button type='button' style='text-align:center' onclick='showDetails()'>Show Details</button></div>"
+                                + "<div><button type='button' onclick='displayRoute()' data-toggle='modal' href='#myModal'>Show Route</button></div>";
                         var infowindow = new google.maps.InfoWindow();
-                        google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                        google.maps.event.addListener(marker[q], 'click', (function (marker, content, infowindow, q) {
                             return function () {
                                 closeInfos();
+                                destnLat = parseFloat(trim(latiOfCenter[q].toString()));
+                                destnLng = parseFloat(trim(longiOfCenter[q].toString()));
                                 infowindow.setContent(content);
                                 infowindow.open(map, marker);
-                                infos[0]=infowindow;
+                                infos[0] = infowindow;
+                                detailsOfClicked = "";
+                                detailsOfClicked = "<table><tr><td>Center:</td><td>"
+                                        + nameOfCenter[q]
+                                        + "</td></tr><tr><td>Description:</td><td>"
+                                        + descOfCenter[q]
+                                        + "</td></tr><tr><td>Address:</td><td>"
+                                        + addrOfCenter[q]
+                                        + "</td></tr><tr><td>Suburb:</td><td>"
+                                        + suburbOfCenter[q]
+                                        + "</td></tr></table>";
                             };
-                        })(marker, content, infowindow));
+                        })(marker[q], content, infowindow, q));
 
                     } // End of multiple markers for(;;) loop -------
-                    
+                    var bounds = new google.maps.LatLngBounds();
+                    for (var i = 0; i < marker.length; i++) {
+                        bounds.extend(marker[i].getPosition());
+                    }
+                    map.fitBounds(bounds);
 
                     // Function for closing info window
                     // This function is to close the info window of a clicked marker when user clicks other marker
@@ -115,15 +134,14 @@
                             infos.length = 0;
                         }
                     }
-                    
-
                 });
             }
-            
-            function showDetails(){
+
+            function showDetails() {
                 detailsPart = document.getElementById("details");
                 detailsPart.innerHTML = detailsOfClicked;
             }
+
 
             //function for showing first map
             function initialize() {
@@ -133,86 +151,146 @@
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
                 map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-                /* 
-                 marker = new google.map.Marker({
-                 position: new google.maps.LatLng(-37.498765, 144.7454),
-                 draggable: false,
-                 map: map
-                 });
-                 
-                 var infowindow = new google.maps.InfoWindow({
-                 content:"hahahahhahahaha" 
-                 });
-                 
-                 google.maps.event.addListener(marker, 'click', function() {
-                 infowindow.open(map,marker);
-                 });
-                 
-                 var locations = [];
-                 locations.push({name: "locate 1", latlng: new google.maps.LatLng(-37.498765, 144.7454)});
-                 
-                 for (var b = 0; b < locations.length; b++) {
-                 var marker = new google.maps.Marker({position: locations[b].latlng, map: map, title: locations[b].name});
-                 }
-                 */
+
+                /* ----------- get current location ----------*/
+                var infoWindow = new google.maps.InfoWindow({map: map});
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setCenter(pos);
+                        //infoWindow.setPosition(pos);
+                        currentLat = pos.lat;
+                        currentLng = pos.lng;
+                        //A marker show current location
+                        var currMarker = new google.maps.Marker({
+                            position: pos,
+                            map: map
+                        });
+                        infoWindow.setContent("Current Location");
+                        infoWindow.open(map, currMarker);
+                        infos[0] = infoWindow;
+
+                    }, function () {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    });
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false, infoWindow, map.getCenter());
+                }
+
+                /* ----------- get current location below ----*/
+            }
+            //get current location
+            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                infoWindow.setPosition(pos);
+                infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+            }
+            // display route for myself
+            function displayRoute() {
+                //New map displayed on modal
+                var map2Prop = {
+                    center: new google.maps.LatLng(-37.8142, 144.9632),
+                    zoom: 10,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var mapRouting = new google.maps.Map(document.getElementById("maprouting"), map2Prop);
+                $('#myModal').on('shown.bs.modal', function () {
+                    displayRoute();
+                });
+                /* ----------- for routing ---------- */
+                directionsDisplay.setMap(mapRouting);
+                directionsDisplay.setPanel(document.getElementById("directions"));
+                calculateAndDisplayRoute(directionsService, directionsDisplay);
+                document.getElementById('mode').addEventListener('change', function () {
+                    calculateAndDisplayRoute(directionsService, directionsDisplay);
+                });
+                /* ----------- for routing below----- */
+            }
+            // shows Direction
+            function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+                var selectedMode = document.getElementById('mode').value;
+                directionsService.route({
+                    origin: {lat: currentLat, lng: currentLng},
+                    destination: {lat: destnLat, lng: destnLng},
+                    travelMode: google.maps.TravelMode[selectedMode]
+                }, function (response, status) {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(response);
+                    } else {
+                        alert("Directions request failed due to " + status);
+                    }
+                });
+            }
+            //Remove space
+            function trim(str) {
+                return str.replace(/(^\s+)|(\s+$)/g, "");
+            }
+        </script>
+
+        <!-- Custom styles for our template -->
+        <link rel="stylesheet" href="css/bootstrap-theme.css" media="screen" >
+        <link rel="stylesheet" href="css/main.css">
+
+        <style>#googleMap {width:100%; height:500px}</style>
+        <style type="text/css">
+            table,th,tr,td{
+                border: 1px solid black;
             }
 
-        </script>
+        </style>
+
     </head>
     <body>
         <!-- NavBar -->
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
+        <!-- Fixed navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top headroom" >
+            <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <!--Screen Reader only -->
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="index.php">
-                        <img style="max-width:40px;" src="pictures/anyone_connected.png"/>
-                    </a>
+                    <!-- Button for smallest screens -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="Progressus HTML5 template"></a>
                 </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><a href="index.php">Anyone Connected</a></li>
-                        <li>
-                            <a href="index.php">Home<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search<span class="caret"></span></a>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav pull-right">
+                        <li><a href="index.php">Home</a></li>
+                        <li class="dropdown active">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="restaurant.php">Restaurant</a></li>
                                 <li class="active"><a href="community_center.php">Community Center</a></li>
                                 <li><a href="community_school.php">Community School</a></li>
                                 <li><a href="searchGPs.php">GPs By Language</a></li>
+                                <li><a href="data_visu.php">LGA Ethnicity</a></li>
                             </ul>
                         </li>
-                        <li><a href="data_visu.php">Data</a></li>
-                        <li><a href="where-to-stay.php">Where to stay</a></li>
-                        <li><a href="about-us.php">About us</a></li>
-                        <li><a href="contact-us.php">Contact us</a></li> 
+                        <li><a href="where-to-stay.php">Suggestions</a></li>
+                        <li><a href="about-us.php">About Us</a></li>
                     </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div> 
+        <!-- /.navbar -->
+
+        <header id="head" class="secondary"></header>
         <!--  --------------------------------------------- Content Below ------------------------------     --> 
 
         <br>
 
 
         <div class="container">
-            <div class="col-lg-8">
-                <div id="googleMap"></div>
-            </div>
-            <div class="col-lg-4">
-                <h1 style="font-size: large; color:orange">Please Select Suburb For Community:</h1><br>
-                <div><select id="sel_suburb" class="form-control">
+            <div class="col-sm-12 maincontent" style="margin-top:10px;min-height:500px"> 
+                <div class="col-lg-8">
+                    <div id="googleMap"></div>
+                </div>
+                <div class="col-lg-4">
+                    <div style="font-size: large; color:orange">Please Select Suburb For Community:</div><br>
+                    <div><select id="sel_suburb">
                             <option value="Abbotsford">Abbotsford</option>
                             <option value="Albert Park">Albert Park</option>
                             <option value="Brunswick">Brunswick</option>
@@ -238,21 +316,52 @@
                             <option value="St Kilda">St Kilda</option>
                             <option value="Thornbury">Thornbury</option>
                         </select></div><br>
-                <div style="text-align:left">
-                    <button class="btn btn-block btn-primary" type="button" onclick="show_selection()">Search</button> 
-                </div><br>
-                <div id="details"></div>
+                    <div style="text-align:left">
+                        <button type="button" onclick="show_selection()">Search</button> 
+                    </div><br>
+                    <div id="details"></div>
+                </div>
             </div>
         </div>
-        <!-- For showing searching results -->
         <br>
-        <br>
-        <div class="container">
-            <div class="col-lg-12" id="t3" ></div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!--                        <div class="container">-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <div id="maprouting" style="height:400px;"></div>
+                                </div>
+                                <div class="col-sm-6" style="height:400px; overflow-y: scroll">
+                                    <div id="directions">
+                                        <b>Mode of Travel: </b>
+                                        <select id="mode">
+                                            <option value="DRIVING">Driving</option>
+                                            <option value="WALKING">Walking</option>
+                                            <option value="BICYCLING">Bicycling</option>
+                                            <option value="TRANSIT">Transit</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        </div>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <br>
-
-
 
 
 

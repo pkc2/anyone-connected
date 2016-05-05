@@ -39,12 +39,11 @@
                                 <li><a href="community_center.php">Community Center</a></li>
                                 <li><a href="community_school.php">Community School</a></li>
                                 <li><a href="searchGPs.php">GPs By Language</a></li>
+                                <li><a href="data_visu.php">LGA Ethnicity</a></li>
                             </ul>
                         </li>
-                        <li><a href="data_visu.php">Data</a></li>
-                        <li><a href="#">Where to stay</a></li>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">Contact us</a></li> 
+                        <li><a href="where-to-stay.php">Suggestions</a></li>
+                        <li><a href="about-us.php">About us</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -54,9 +53,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <iframe src="https://www.zomato.com/widgets/res_search_widget.php?city_id=259&language_id=1&theme=red&widgetType=custom&sort=popularity" style="position:relative;width:100%;height:100%;" border="0" frameborder="0">
-                    </iframe>
-                </div>
+                <iframe src="https://www.zomato.com/widgets/res_search_widget.php?city_id=259&language_id=1&theme=red&widgetType=custom&sort=popularity" style="position:relative;width:100%;height:100%;" border="0" frameborder="0">
+                </iframe>
+            </div>
             </div>
         </div>
         

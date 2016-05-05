@@ -8,43 +8,36 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title>Anyone Get Connected!</title>
+        <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+
+        <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+
+        <!-- Custom styles for our template -->
+        <link rel="stylesheet" href="css/bootstrap-theme.css" media="screen" >
+        <link rel="stylesheet" href="css/main.css">
         <!--CDN css files-->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="css/bootstrap.min.css" >
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-
         <script>
         </script>
 
 
     </head>
-    <body>`
-        <!-- NavBar -->
-        <nav class="navbar navbar-default navbar-fixed-top">
+    <body>
+        <!-- Fixed navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top headroom" style="background: rgba(0, 0, 0, .8);">
             <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <!--Screen Reader only -->
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">
-                        <img style="max-width:40px;" src="pictures/anyone_connected.png"/>
-                    </a>
+                    <!-- Button for smallest screens -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="Progressus HTML5 template"></a>
                 </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="#">Home<span class="sr-only">(current)</span></a>
-                        </li>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="active"><a href="index.php">Home</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search<span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="restaurant.php">Restaurant</a></li>
                                 <li><a href="community_center.php">Community Center</a></li>
@@ -53,119 +46,120 @@ and open the template in the editor.
                             </ul>
                         </li>
                         <li><a href="data_visu.php">Data</a></li>
-                        <li><a href="#">Where to stay</a></li>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="contact-us.php">Contact us</a></li> 
+                        <li><a href="where-to-stay.php">Where to Stay</a></li>
+                        <li><a href="about-us.php">About Us</a></li>
                     </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+        <!-- /.navbar -->
 
+        <!-- Header -->
+        <header>
+            <div class="container-fluid">  
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
 
-
-        
-        <!-- This container contains the carousel slide -->
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <!--This "data-ride" attribute told browser, when this element clicked, you need to 
-                        call some js, the slider needs to do sliding.-->
-                    <div id="home-slider" class="carousel slide" data-ride="carousel">
-                        <!-- indicators dot nov 。。。-->
-                        <ol class="carousel-indicators">
-                            <li data-target="#home-slider" data-slide-to="0" class="active"></li>
-                            <li data-target="#home-slider" data-slide-to="1"></li>
-                            <li data-target="#home-slider" data-slide-to="2"></li>
-                        </ol>
-                        <!-- wrapper for slide -->
-                        <div class="carousel-inner" role="listbox">
-                            <!-- active means the image that showed when page loads-->
-                            <div class="item active">
-                                <img src="pictures/homePage_resized.jpg" alt="anyoneconnected"/>
-                                <div class="carousel-caption">
-                                    <h1>Button later</h1>
-                                </div>
-                            </div> 
-                            <!-- Second image slide -->
-                            <div class="item">
-                                <img src="pictures/data-vis.jpg" alt="anyoneconnected"/>
-                                <div class="carousel-caption">
-                                    <h1>Button 2 later</h1>
-                                </div>
-                            </div> 
-                            <div class="item">
-                                <img src="pictures/highschool_resized.jpg" alt="anyoneconnected"/>
-                                <div class="carousel-caption">
-                                    <h1>Button 3 later</h1>
-                                </div>
-                            </div> 
-
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <div class="container2" style="height: 610px"><img class="container3" src="images/carousel1.jpg" alt=""/></div>
+                            <div class="carousel-caption">
+                            </div>
                         </div>
-
-                        <!-- Controls or next and previous buttons-->
-                        <a class="left carousel-control" href="#home-slider" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="right carousel-control" href="#home-slider" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-
+                        <div class="item">
+                            <div class="container2" style="height: 610px"><img class="container3" src="images/carousel2.jpg" alt=""/></div>
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="container2" style="height: 610px"><img class="container3" src="images/carousel3.jpg" alt=""/></div>
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
                     </div>
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
             </div>
-        </div><br />
-        <!-- THree pictures -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <a href="restaurant.php">
-                        <img src="pictures/restaurants.jpg" class="img-responsive"/>
-                    </a>
-                </div>
-                <div class="col-lg-3">
-                    <a href="community_center.php">
-                        <img src="pictures/BirdNest_comm_center.jpg"  class="img-responsive"/>
-                    </a>
-                </div>
-                <div class="col-lg-3">
-                    <a href="community_school.php">
-                        <img src="pictures/monash.jpg"  class="img-responsive"/>
-                    </a>
-                </div>
-                <div class="col-lg-3">
-                    <a href="searchGPs.php">
-                        <img src="pictures/MonashMedicalCentre.jpg"  class="img-responsive"/>
-                    </a>
-                </div>
+        </header>
+        <!-- /Header -->
+
+        <!-- Intro -->
+        <div class="container text-center">
+            <h2 class="thin">The place where you get information for</h2>
+            <p class="text-muted">
+                Get information about any restaurants, community center, GPs <br> 
+                and schools in different suburbs of Victoria.
+            </p>
+        </div>
+        <!-- /Intro-->
+
+        <!-- Highlights - jumbotron -->
+        <div class="jumbotron top-space">
+            <div class="container">
+
+                <h3 class="text-center thin">What we offer</h3>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 highlight">
+                        <a href="restaurant.php">
+                            <img src="images/restaurants.jpg" class="img-responsive"/>
+                        </a>
+                        <a href="restaurant.php"><div class="h-caption" style="text-decoration:underline">
+                                <h4>Search Restaurant That You Like</h4>
+                            </div></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 highlight">
+                        <a href="community_center.php">
+                            <img src="images/BirdNest_comm_center.jpg"  class="img-responsive"/>
+                        </a>
+                        <a href="community_center.php">
+                            <div class="h-caption" style="text-decoration:underline">
+                                <h4>Search Your Community Center</h4>
+                            </div></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 highlight">
+                        <a href="community_school.php">
+                            <img src="images/monash.jpg"  class="img-responsive"/>
+                        </a>
+                        <a href="community_school.php">
+                            <div class="h-caption" style="text-decoration:underline">
+                                <h4>Find School For Your Children</h4>
+                            </div></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 highlight">
+                        <a href="searchGPs.php">
+                            <img src="images/MonashMedicalCentre.jpg"  class="img-responsive"/>
+                        </a>
+                        <a href="searchGPs.php">
+                            <div class="h-caption" style="text-decoration:underline">
+                                <h4>Find GPs Speak Your Language</h4>
+                            </div></a>
+                    </div>
+                </div> <!-- /row  -->
+
             </div>
         </div>
-        <!-- Description links below the images -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3" style="text-align:center; text-decoration:underline">
-                    <a href="restaurant.php">
-                        Search Restaurant That You Like
-                    </a>
-                </div>
-                <div class="col-lg-3" style="text-align:center; text-decoration:underline">
-                    <a href="community_center.php">
-                        Search Your Community Center 
-                    </a>
-                </div>
-                <div class="col-lg-3" style="text-align:center; text-decoration:underline">
-                    <a href="community_school.php">
-                        Find Appropriate School For Your Children
-                    </a>
-                </div>
-                <div class="col-lg-3" style="text-align:center; text-decoration:underline">
-                    <a href="searchGPs.php">
-                        Find GPs That Speak Your Language
-                    </a>
-                </div>
-            </div>
-        </div>
+        <!-- /Highlights -->
+
+
+
+
+
+
 
 
         <hr class="featurette-divider">

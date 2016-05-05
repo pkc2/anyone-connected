@@ -50,25 +50,23 @@ and open the template in the editor.
                         <li><a href="data_visu.php">Data</a></li>
                         <li><a href="where-to-stay.php">Where to stay</a></li>
                         <li class="active"><a href="about-us.php">About us</a></li>
-                        <li><a href="contact-us.php">Contact us</a></li> 
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-    <!--  --------------------------------------------- Content Below ----------------------------------   -->       
-    <br>
-    <br>
-    <br>
-    <br>
-        This is About Us page.
-        COMMING SOON.....
-    <br>
-    <br>
-    <br>
-    <br>
-        
-        
-    <!--  --------------------------------------------- Content Above ----------------------------------   -->       
+        <!--  --------------------------------------------- Content Below ----------------------------------   -->       
+        <span style="display:block;clear:both;height: 0px;padding-top: 20px;border-top-width:0px;border-bottom-width:0px;">
+        </span>
+        <p><strong>Anyone Connected is an informative website that mainly targets the&nbsp;international students who are very new to&nbsp;Victoria. 
+                This website consider helps user find restaurants, the suburb ethnicity, language centers and transportation facility in particular suburbs in Victoria.</strong></p>
+        <p><strong>What makes Anyone Connected different from the websites available in the market is that all these things are there&nbsp;internet, but not together. 
+                So what our website does is that it provides a visual statistics through maps&nbsp;where user can select the categories they want information of.</strong></p>
+        <p><strong>Also our website suggests&nbsp;
+                user suburbs that suits them most according to the requirements they provide as to what they are looking for in the suburb they want to live in.</strong></p>
+        <p><strong><span style="color: #000000;"><span style="display:block;clear:both;height: 0px;padding-top: 20px;border-top-width:0px;border-bottom-width:0px;"></span></span>&nbsp;.</strong></p>
+        <p>&nbsp;</p><p><strong>Our Team</strong></p>
+
+        <!--  --------------------------------------------- Content Above ----------------------------------   -->       
         <hr class="featurette-divider">
         <div class="container">
             <footer>
@@ -80,8 +78,8 @@ and open the template in the editor.
         <script src="js/jquery.min.js"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="js/bootstrap.min.js"></script>
-       
-       
+
+
     </body>
 </html>
 
